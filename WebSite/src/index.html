@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- These meta tags are inserted by webpack during the build process. -->
+        <!-- 
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width"/>
+        -->
+
+        <title>Goals - Set, measure and achieve</title>
+    </head>
+
+    <body>
+        <header>
+            <!-- TODO - Add Navigation content -->
+            <h1>
+                Goals - Set, measure and achieve
+            </h1>
+        </header>
+        <main>
+            <section>
+                <h2>Overview</h2>
+                <p>
+                    Goals is a web site which helps users set and achieve goals.  It does this by helping them measure their progress and 
+                    learn from setbacks.  It also helps them prioritize goals because no one can work towards 10 things at once.
+                </p>
+                <p>
+                    Each goal has several parts.  First, each goal has a name and optional description.  Second, it contains an optional 
+                    list of lessons learned.  Lessons learned are things the user learned while trying to achieve a goal.  Users 
+                    periodically review them so they remember what they learned and so they can reach their goals in less time.  Finally, 
+                    a goal has one or more metrics.  Metrics are <strong>very</strong> important because they let a person know how they 
+                    are doing.
+                </p>
+                <p>
+                    Metrics allow individuals to measure their progress towards a goal.  Metrics have a name, an optional description, a
+                    type (number, time, Yes/No, etc.), a target value, and information about how they are collected and calculated.  Here 
+                    is an example.  Suppose an individual wants to reach a heathy weight.  The individual decides to measure their weight 
+                    each week on Sunday morning.  Here is the metric the individual creates:
+                </p>
+                <table>
+                    <tr>
+                        <th scope="row">Metric Name</th>
+                        <td>Weight (lbs)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td>Whole number (non-negative integer)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Target</th>
+                        <td>170</td>
+                    </tr>
+                </table>
+                <p>
+                    The individual can easily create this metric with very little work.  If the individual wants to include a lot of 
+                    information and have the site remind him to check the metric weekly, the individual can create a metric with these
+                    properties:
+                </p>
+                <table>
+                    <tr>
+                        <th scope="row">Metric Name</th>
+                        <td>Weight (lbs)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Description</th>
+                        <td>My body's weight in pounds (lbs).  It's measure every Sunday night.</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Type</th>
+                        <td>Whole number (non-negative integer)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Measurement Frequency</th>
+                        <td>Weekly</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Target</th>
+                        <td>170</td>
+                    </tr>                   
+                </table>
+                <p>
+                    The main reason there are multiple ways to create a metric is ease of use.  Requiring users to fill out every field 
+                    makes the program harder to use.  It also requires more effort and users might not have the time, energy, desire or 
+                    need to fill out the optional metric fields.
+                </p>
+                <p>
+                    Users will occasionally not enter metrics.  It can be because they forget, they didn't have time or a different
+                    reason.  This is OK.  The Goals web site handles missing metrics.  For example, a user forgets to record 
+                    some measurements during a week.  The metric is a weekly metric and records the average week's measurements.  
+                    The metric will only use the measurements entered to calculate the average.  If the user records no measurements,
+                    that is also OK.  The metric's weekly value will be N/A and charts will exclude weeks with no measurements.
+                </p>
+            </section>
+            <section>
+                <h2>Features</h2>
+
+                <p>Here are the features the first version of the web site will have:</p>
+
+                <ul>
+                    <li>Each user has an account</li>
+                    <li>Users can only see data in their account</li>
+                    <li>
+                        <p>
+                            A user's account contains the following:
+                        </p>
+                        <ul>
+                            <li>A link to the user's Azure Active Directory account</li>
+                            <li>The user's web site settings</li>
+                            <li>A list of the user's goals</li>
+                        </ul>
+                    </li>
+                   
+                    <li>
+                        <p>A goals has the following properties:</p>
+
+                        <ul>
+                            <li>A name</li>
+                            <li>An optional description</li>
+                            <li>An optional list of associated metrics</li>
+                            <li>
+                                <p>
+                                    An optional list of lessons learned.  These are notes which explain what the user learned while working 
+                                    toward the goal.  For example, if a user's goal is to get to a healthy weight, here are some lessons
+                                    the user might have learned:
+                                </p>
+                                <ul>
+                                    <li>
+                                        <q>I should only buy a small bags of cookies or chips at the super market because I tend eat the 
+                                            entire bag after I get home.</q>
+                                    </li>
+                                    <li>
+                                        <q>I noticed eating plane fat free yogurt, vegetables, fruit and drinking water reduces the urge to
+                                           over eat.</q>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>An optional list of notes.</li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        User can optionally ask Goals to show one lessoned learned each day.  This is helpful because it reminds 
+                        users of things they may have forgotten.  It also helps them avoid past mistakes.
+                    </li>
+                    
+                    <li>
+                        A metric has the following properties:
+
+                        <ul>
+                            <li>A name</li>
+                            <li>An optional description</li>
+                            <li>
+                                A type.  Here are the allowed types:
+                                <ul>
+                                    <li>Whole number (non-negative integer)</li>
+                                    <li>Number (integer)</li>
+                                    <li>Number (decimal)</li>
+                                    <li>Number (percent)</li>
+                                    <li>Boolean (true/false)</li>
+                                    <li>Yes / No</li>
+                                    <li>Completed / Not completed</li>
+                                    <li>Time (hours, minutes, seconds)</li>
+                                </ul>
+                            </li>
+                            <li>
+                                A target value.  This is the value of the metric when the user achieves their goal.  For example, a
+                                user's goal is to lose 10 pounds; the user's weight is 180lbs; and the metric is the user's weight.  
+                                The target value would be 170lbs in this case.
+                            </li>
+                            <li>
+                                <p>An optional measurement frequency.  Here are the supported values: </p>
+
+                                <ul>
+                                    <li>Daily</li>
+                                    <li>Certain days of the week</li>
+                                    <li>Weekly</li>
+                                    <li>Monthly</li>
+                                    <li>Any time</li>
+                                </ul>
+
+                                <p>
+                                    There will be a page where users can go to see the metrics which need measurement values.  Basically, 
+                                    the site will determine which metrics are ready to be entered and then it will show them on the page.
+                                    Metrics which have been entered will be removed from the page.  Metrics which are never entered will
+                                    be removed 2 days after the metric's due date.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    An optional metric period.  The measurement frequency and metric period sound similar but have
+                                    different purposes.  The measurement frequency determines how often a user can make measurements.
+                                    The metric period determines which measurements are converted to a metric value using the 
+                                    metric function.  Sum, average, and count are examples of metric functions.  
+                                    
+                                    Here is an example.  If a user wants to measure how much time he spend exercising each week, he 
+                                    would create the following metric:
+                                </p>
+
+                                <table>
+                                    <tr>
+                                        <th>Metric Name</th>
+                                        <td>Exercise time</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Type</th>
+                                        <td>Time</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Measurement Frequency</th>
+                                        <td>Any time</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Metric Period</th>
+                                        <td>Weekly - The week starts on Monday and ends on Sunday</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Metric Aggregation Function</th>
+                                        <td>Sum</td>
+                                    </tr>
+                                </table>
+                                
+                                <p>                                
+                                    The value of the metric for a particular week would be the sum of all of the measurements during a particular week.
+                                    For example, a user exercises 2 hours on Monday, 1.5 hours the next day, and 0.5 hours on Friday.  The metric's 
+                                    value would be 4 hours because the metric's period is a week, its aggregation function is sum and all 3 measurements
+                                    were made during the same week.
+
+                                    For some metrics, the measurement frequency and metric period are the same.  For example, a metric 
+                                    which measures a person's weight each week might set them the same because the person only measures 
+                                    their weight once each week.
+                                </p>
+                            </li>
+
+                            <li>
+                                An optional metric function.  This is only required if more than 1 measurement can be measured
+                                during a measurement period.  Here is a list of the valid values:
+
+                                <ul>
+                                    <li>Sum</li>
+                                    <li>Average</li>
+                                    <li>Count</lie>
+                                </ul>
+                            </li>
+                            <li>
+                                A list of zero or more measurements.  Each measurement consists of a value and the instant (date 
+                                and time) it was recorded.
+                            </li>
+                            <li>
+                                A metric's current value.  This can be several things.
+
+                                <ol>
+                                    <li>If the metric has no measurements during the metric period, it's value is N/A (not available)</li>
+                                    <li>If the metric only has one measurement, it's the measurement's value.</li>
+                                    <li>
+                                        If the metric has multiple measurements, it's value is computed by passing all of the measurements 
+                                        to the the metric function.
+                                    </li>
+                                </ol>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>Users can create, update and delete goals</li>
+                    <li>Users can create, update and delete metrics</li>
+                    <li>
+                        Users can create, update and delete metric values.  The reason is users sometimes make mistakes and need to 
+                        correct them.
+                    </li>
+                    <li>User can visualize their progress using graphs</li>
+                </ul>
+            </section>
+            <section>
+                <h2>User Interface Design</h3>
+
+                <p>The user interface will consist of several pages:</p>
+
+                <ul>
+                    <li>
+                        <strong>Main page</strong> - This is displayed when the user first goes to the web site and is not logged in.  It 
+                        states what the site does and has a Sign In button in the upper right corner.
+                    </li>
+
+                    <li>
+                        <strong>Main signed in user page</strong> - This page has two parts.  First, it shows the metrics which 
+                        need measurements.  User can enter metric values here.  Second, it will show all of the user's goals and metrics 
+                        in priority order.  Users can add, update, and delete goals and metrics.  Clicking on a goal goes into the goal's 
+                        page.  Clicking on a metric goes to the metric's page.  
+                    </li>
+                    <li>
+                        <strong>Goal page</strong> - This page shows all of a goal's properties including name, description, metrics, 
+                        lessons learned and notes.  Users can change the goal's properties. They can also manage notes, lesson's learned, 
+                        and metrics.  Clicking on a metric goes to the metric's page.
+                    </li>
+                    <li>
+                        <strong>Metric page</strong> - This page shows a metric's properties including name, type, measurement frequency, 
+                        metric period, metric function, measurements, and current value.  Users can change a metric's properties. Users 
+                        can also add, update and delete measurements.
+                    </li>
+                </ul> 
+            </section>
+        </main>
+    </body>
+</html>
