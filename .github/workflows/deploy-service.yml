@@ -1,0 +1,55 @@
+name: Deploy Service 
+
+# https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+
+# For more information on permissions, please see the following references:
+# - https://docs.github.com/en/actions/reference/authentication-in-a-workflow 
+# - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+# - https://docs.github.com/en/rest/reference/permissions-required-for-github-apps
+#
+# Note that unspecified permissions are set to none.
+permissions: 
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+# push:
+#    branches:
+#      - main
+ 
+jobs:
+  call-build-web-site-workflow-job:
+    uses: ./.github/workflows/build-web-site.yml
+
+  deploy-web-site-job:
+    name: Deploy Web Site
+    runs-on: ubuntu-latest
+    needs: call-build-web-site-workflow-job
+    steps:
+      # These artifacts are uploaded by the build-web-site.yml workflow.
+      - name: Download Web Site Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: GoalsWebSite
+          path: WebSite/
+
+      # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig .
+      # This configuration comes from the instructions in 
+      # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=github-actions#skip-building-front-end-app
+      - name: Deploy Goals web site
+        id: build-and-deploy-goals-web-site
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          action: "upload"
+
+          skip_app_build: true
+          app_location: 'WebSite' # Location of the files I want to deploy
+          output_location: ''
+
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MEADOW_0A094DB1E }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+

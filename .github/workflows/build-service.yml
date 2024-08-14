@@ -1,0 +1,48 @@
+name: Deploy Service CI/CD Workflow 
+
+# For more information on permissions, please see the following references:
+# - https://docs.github.com/en/actions/reference/authentication-in-a-workflow 
+# - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+# - https://docs.github.com/en/rest/reference/permissions-required-for-github-apps
+#
+# Note that unspecified permissions are set to none.
+permissions: 
+  contents: read
+  pull-requests: read
+
+# This workflow is meant to be reused by other workflows.  Here is the documentation for reusing GitHub workflows: 
+# https://docs.github.com/en/actions/using-workflows/reusing-workflows
+on:
+  workflow_call:
+    
+jobs:
+  build-web-site-job:
+    name: Build Web Site
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Get the changed source code
+        uses: actions/checkout@v3
+
+      # Action documentation: https://github.com/marketplace/actions/setup-node-js-environment and https://github.com/actions/setup-node
+      - name: Install Node and npm
+        uses: actions/setup-node@v3 
+        with:
+            node-version: 20.x
+            check-latest: true
+
+      - name: Install NPM dependencies
+        run: npm install
+        working-directory: ./WebSite
+
+      - name: Build Web Site
+        run: npm run build
+
+      # TODO - Run tests when they are written.
+
+      - name: Upload Web Site Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: GoalsWebSite
+          path: WebSite/dist/
+          if-no-files-found: error
