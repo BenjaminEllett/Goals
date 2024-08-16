@@ -24,7 +24,7 @@ on:
  
 jobs:
   call-build-web-site-workflow-job:
-    uses: ./.github/workflows/build-web-site.yml
+    uses: ./.github/workflows/build-service.yml
 
   deploy-web-site-job:
     name: Deploy Web Site
