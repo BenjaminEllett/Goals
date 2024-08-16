@@ -17,9 +17,10 @@ concurrency:
   cancel-in-progress: true
 
 on:
-# push:
-#    branches:
-#      - main
+  push:
+    branches:
+      - main
+      - add-ci-cd-pipeline-and-web-site-deployment
  
 jobs:
   call-build-web-site-workflow-job:
@@ -31,8 +32,10 @@ jobs:
     needs: call-build-web-site-workflow-job
     steps:
       # These artifacts are uploaded by the build-web-site.yml workflow.
+      #
+      # Action Documentation: https://github.com/actions/download-artifact?tab=readme-ov-file#actionsdownload-artifact
       - name: Download Web Site Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: GoalsWebSite
           path: WebSite/
@@ -47,9 +50,8 @@ jobs:
           action: "upload"
 
           skip_app_build: true
-          app_location: 'WebSite' # Location of the files I want to deploy
+          app_location: WebSite/ # Location of the files I want to deploy
           output_location: ''
 
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_MEADOW_0A094DB1E }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_THANKFUL_MOSS_0C501961E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-
