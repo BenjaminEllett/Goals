@@ -1,6 +1,4 @@
-name: Deploy Service 
-
-# https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+name: Deploy Web Site and Services 
 
 # For more information on permissions, please see the following references:
 # - https://docs.github.com/en/actions/reference/authentication-in-a-workflow 
@@ -20,11 +18,10 @@ on:
   push:
     branches:
       - main
-      - add-ci-cd-pipeline-and-web-site-deployment
  
 jobs:
   call-build-web-site-workflow-job:
-    uses: ./.github/workflows/build-service.yml
+    uses: ./.github/workflows/build-web-site.yml
 
   deploy-web-site-job:
     name: Deploy Web Site

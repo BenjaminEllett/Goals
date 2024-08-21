@@ -1,4 +1,4 @@
-name: Deploy Service CI/CD Workflow 
+name: Build Web Site 
 
 # Useful GiHUb Actions Documentation
 # - https://docs.github.com/en/actions/writing-workflows/about-workflows

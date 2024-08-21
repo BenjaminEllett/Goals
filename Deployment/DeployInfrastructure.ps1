@@ -17,7 +17,7 @@ function Main([string] $environmentInternal)
 
 function DeployBicepFiles([string] $environmentInternal)
 {
-    DisplayHeader 'Reviewing and Deploying Bicep files'
+    DisplayHeader 'Reviewing and Deploying the Azure Infracture Changes in Goal''s Bicep files'
 
     [string] $bicepFileDirectory = Join-Path -Path $PSScriptRoot -ChildPath 'Bicep'
 
@@ -25,18 +25,19 @@ function DeployBicepFiles([string] $environmentInternal)
 
     try 
     {
-        $deploymentParameters = @{
+        $getAzDeploymentWhatIfResultPatameters = @{
             TemplateFile = 'Main.bicep'
             Location = 'West US 2'
             Environment = $environmentInternal
+            ExcludeChangeType = 'NoChange'
         }
-    
+
         [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfOperationResult] $whatIfResults = $null
-        $whatIfResults = Get-AzDeploymentWhatIfResult -TemplateFile .\Main.bicep -Location 'West US 2' -Environment Development 
+        $whatIfResults = Get-AzDeploymentWhatIfResult @getAzDeploymentWhatIfResultPatameters
         if ($whatIfResults.Status -ne 'Succeeded') 
         {
-            [string] $errorMessage = $null -eq  $whatIfResults.Error ? '' : $whatIfResults.Error.Message
-            throw "Error: Unable to get What-If results. Status: $($whatIfResults.Status)   Error message: $errorMessage"
+            [string] $errorMessage = $null -eq $whatIfResults.Error ? '' : $whatIfResults.Error.Message
+            throw "ERROR: Get-AzDeploymentWhatIfResult failed. Here is some technical information: Status: $($whatIfResults.Status)   Error message: $errorMessage"
         }
 
         RemoveFalseChanges $whatIfResults
@@ -49,16 +50,30 @@ function DeployBicepFiles([string] $environmentInternal)
 
         DisplayBlankLine 5
 
+        [string] $confirmationString = 'Deploy'
         [string] $confirmationMessage =
-            "Please review the changes above.  If these are good changes, type 'I want to deploy these changes' to deploy the changes.  " +
+            "Please review the changes above.  If these are good changes, type '$confirmationString' to deploy the changes.  " +
             "Press CTRL+C to abort deployment"
+
+        [bool] $confirmedDeployment = $false
 
         do
         {
-            $confirmation = Read-Host $confirmationMessage
+            [string] $usersInput = Read-Host $confirmationMessage
+            $confirmedDeployment = $usersInput -eq $confirmationString
+            if (!$confirmedDeployment)
+            {
+                DisplayBlankLine
+            }
         } 
-        while ($confirmation -ne 'I want to deploy these changes')
-    
+        while (!$confirmedDeployment)
+
+        $deploymentParameters = @{
+            TemplateFile = 'Main.bicep'
+            Location = 'West US 2'
+            Environment = $environmentInternal
+        }
+
         New-AzDeployment @deploymentParameters
     }
     finally
@@ -67,29 +82,28 @@ function DeployBicepFiles([string] $environmentInternal)
     }
 }
 
+# A false change is a change which Bicep/Azure Resource Manager claims will occur if a deployment is performed but will not occur 
+# when a deployment occurs.  They typically occur for the following reasons:
+#
+# 1. There is a bug in a particular resource's Azure Resource Manger code.  For example, the properties.stableInboundIP property
+#    on an Azure Static Web Site resource has this bug.  Each time the WhatIf command is run, WhatIf claims the
+#    properties.stableInboundIP property will change.  However, when the deployment is actually performed, 
+#    properties.stableInboundIP's value does not change.
+#  
+# 2. "The what-if operation can't resolve the reference function. Every time you set a property to a template expression that 
+#    includes the reference function, what-if reports the property will change. This behavior happens because what-if compares
+#    the current value of the property (such as true or false for a boolean value) with the unresolved template expression. 
+#    Obviously, these values will not match. When you deploy the Bicep file, the property will only change when the template
+#    expression resolves to a different value."
+#    (https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-what-if?tabs=azure-powershell%2CCLI#see-results)
+#
 function RemoveFalseChanges(
     [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfOperationResult] $whatIfResults
     )
 {
     $Delete = [Microsoft.Azure.Management.ResourceManager.Models.PropertyChangeType]::Delete
-
     [string] $webSiteResourceId = '/subscriptions/c47fab2e-7725-4c7e-a8a2-7e4a2ec97880/resourceGroups/goals-dev-usw2-rg-web-site/providers/Microsoft.Web/staticSites/goals-dev-usw2-swa-web-site' 
 
-    # A false change is a change which Bicep/Azure Resource Manager claims will occur if a deployment is performed but will not occur 
-    # when a deployment occurs.  They typically occur for the following reasons:
-    #
-    # 1. There is a bug in a particular resource's Azure Resource Manger code.  For example, the properties.stableInboundIP property
-    #    on an Azure Static Web Site resource has this bug.  Each time the WhatIf command is run, WhatIf claims the
-    #    properties.stableInboundIP property will change.  However, when the deployment is actually performed, 
-    #    properties.stableInboundIP's value does not change.
-    #  
-    # 2. "The what-if operation can't resolve the reference function. Every time you set a property to a template expression that 
-    #    includes the reference function, what-if reports the property will change. This behavior happens because what-if compares
-    #    the current value of the property (such as true or false for a boolean value) with the unresolved template expression. 
-    #    Obviously, these values will not match. When you deploy the Bicep file, the property will only change when the template
-    #    expression resolves to a different value."
-    #    (https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-what-if?tabs=azure-powershell%2CCLI#see-results)
-    #
     RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.areStaticSitesDistributedBackendsEnabled' $Delete
     RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.deploymentAuthPolicy' $Delete
     RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.stableInboundIP' $Delete
@@ -113,34 +127,28 @@ function RemoveSinlgeFalseChange(
     if ($null -eq $deltaToRemove)
     {
         [string] $warningMessage = 
-            "WARNING: Unable to find the change for resource ID: $changeResourceId and property path: $properyPath .  This usually occurs " +
+            "Unable to find the change for resource ID: $changeResourceId and property path: $properyPath .  This usually occurs " +
             "because the property name is misspelled or has a space at the end."
 
         Write-Warning $warningMessage
         return
     }
 
-    [void]($changedResource.Delta.Remove($deltaToRemove))
-
-    # Replace the Modify change type with the NoChange change type if there are no changes.
-    if (($changedResource.ChangeType -eq 'Modify') -and 
-        ($changedResource.Delta.Count -eq 0))
+    # Remove() returns "true if item is successfully removed; otherwise, false. This method also returns false if item was 
+    # not found in the List<T>." (https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.remove)
+    if (!$changedResource.Delta.Remove($deltaToRemove))
     {
-        [Microsoft.Azure.Management.Resources.Models.WhatIfChange] $updatedChangedResource = $null
-        [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfChange] $updatedPowerShellChangedResource = $null
+        throw "ERROR: Unable to remove a change.  This usually occurs because the change does not exist or multiple changes where " +
+              "returned when we searched for the change.  Here is some technical information: " +
+              "resource ID: '$changeResourceId'   " +
+              "change type: '$changeType'   " +
+              "property path: '$properyPath'   "
+    }
 
-        # https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.management.resources.models.whatifchange.-ctor?view=az-ps-latest#microsoft-azure-management-resources-models-whatifchange-ctor(system-string-microsoft-azure-management-resources-models-changetype-system-string-system-object-system-object-system-collections-generic-ilist((microsoft-azure-management-resources-models-whatifpropertychange)))
-        [object[]] $updatedChangeConstructorParameters = @(
-            $changedResource.FullyQualifiedResourceId,
-            ([Microsoft.Azure.Management.Resources.Models.ChangeType]::NoChange)
-        )
-
-        $updatedChangedResource = New-Object -TypeName 'Microsoft.Azure.Management.Resources.Models.WhatIfChange' -ArgumentList $updatedChangeConstructorParameters
-        
-        # https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.commands.resourcemanager.cmdlets.sdkmodels.deployments.pswhatifchange.-ctor?view=az-ps-latest
-        $updatedPowerShellChangedResource = New-Object -TypeName 'Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfChange' -ArgumentList $updatedChangedResource
-
-        $whatIfResults.Changes[$changedResourceIndex] = $updatedPowerShellChangedResource
+    # Remove changes which have no changes in them.  This prevents these changes from being displayed.
+    if (($changedResource.ChangeType -eq 'Modify') -and ($changedResource.Delta.Count -eq 0))
+    {
+        $whatIfResults.Changes.RemoveAt($changedResourceIndex)
     }
 }
 

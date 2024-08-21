@@ -1,7 +1,5 @@
 name: Validate Pull Request
 
-# https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
-
 # For more information on permissions, please see the following references:
 # - https://docs.github.com/en/actions/reference/authentication-in-a-workflow 
 # - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
