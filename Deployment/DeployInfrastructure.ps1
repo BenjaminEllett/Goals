@@ -32,7 +32,6 @@ function DeployBicepFiles([string] $environmentInternal)
             ExcludeChangeType = 'NoChange'
         }
 
-        [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfOperationResult] $whatIfResults = $null
         $whatIfResults = Get-AzDeploymentWhatIfResult @getAzDeploymentWhatIfResultPatameters
         if ($whatIfResults.Status -ne 'Succeeded') 
         {
