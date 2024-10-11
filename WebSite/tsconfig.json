@@ -14,22 +14,33 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "useDefineForClassFields": true,
-        "allowJs": true,
-        "jsx": "react",
-        "target": "ES2021",
-        "module": "ES2020",
-        "lib": [
-            "ES2021",
-            "DOM",
-            "WebWorker"
-        ],
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "useUnknownInCatchVariables": true,
+
+        "module": "ES2022",
+
+        "inlineSources": true,
         "newLine": "lf",
-        "removeComments": true,
         "noEmitOnError": true,
+        "outDir": "BuildOutput",
+        "removeComments": true,
         "sourceMap": true,
-        "outDir": "dist",
+
+        "allowJs": true,
+
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+
+        "jsx": "react",
+        "lib": [
+            "ES2022",
+            "DOM"
+        ],
+        "target": "ES2022",
+        "useDefineForClassFields": true,
     },
     "include": [
         "src/**/*"

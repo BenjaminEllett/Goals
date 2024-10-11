@@ -5,6 +5,38 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug Build's JavaScript code",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/WebSite/Build/Build.mjs",
+            "cwd": "${workspaceFolder}/WebSite",
+            "args": [
+                //"--build",
+                "--build-and-serve-web-site",
+                "--debug"
+                //"--release"
+            ],
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+
+        {
+            "name": "Debug Build Script",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${workspaceFolder}/WebSite/Build/Build.ps1",
+            "cwd": "${workspaceFolder}/WebSite/Build",
+            "args": [
+                "-CleanBuild",
+                "-Debug",
+                //"-Release",
+                //"-Build"
+                "-BuildAndServeWebSite"
+            ]            
+        },
+
+        {
             "name": "Debug DeployInfrastructure.ps1",
             "type": "PowerShell",
             "request": "launch",
