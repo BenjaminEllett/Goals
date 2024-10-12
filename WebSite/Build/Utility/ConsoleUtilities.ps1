@@ -5,7 +5,7 @@ function DisplayBlankLine()
 
 function DisplayHorizonalSeparator()
 {
-    [int] $bufferWidthInChars = [System.Console]::BufferWidth
+    [int] $bufferWidthInChars = $Host.UI.RawUI.BufferSize.Width
     Write-Host "bufferWidthInChars = $bufferWidthInChars" # TODO - Remove this line
 
     [System.Text.StringBuilder] $horizonalSeparator = [System.Text.StringBuilder]::new($bufferWidthInChars)
