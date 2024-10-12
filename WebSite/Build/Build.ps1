@@ -76,7 +76,6 @@ function BuildWebSite()
         DisplayHeader 'Install Node Packages'
         npm install
         VerifyNativeFunctionSucceeded "ERROR: npm install failed with error code $LASTEXITCODE"
-        Get-ChildItem -Recurse -Path './node_modules/.bin'
 
 
 
@@ -85,7 +84,7 @@ function BuildWebSite()
 
 
 
-        ./node_modules/.bin/tsc.ps1 --noEmit
+        ./node_modules/.bin/tsc --noEmit
         VerifyNativeFunctionSucceeded "ERROR: The type script compiler failed with error code $LASTEXITCODE"
 
 
@@ -231,7 +230,7 @@ function BuildSassFile([System.IO.FileInfo] $sassFile)
 
 function RunSassProgram([string[]] $commandLineOptions)
 {
-    [string] $sassOutput = ./node_modules/.bin/sass.ps1 @commandLineOptions
+    [string] $sassOutput = ./node_modules/.bin/sass @commandLineOptions
     VerifyNativeFunctionSucceeded "ERROR: SASS (node .\node_modules\sass\sass.js) failed with error code $LASTEXITCODE"
     return $sassOutput
 }
