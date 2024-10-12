@@ -40,8 +40,6 @@ Set-StrictMode -Version Latest
 #
 function BuildWebSite()
 {
-    Get-ChildItem -Recurse # TODO - Remove
-
     if ($DebugBuild -and $ReleaseBuild)
     {
         throw 'ERROR: You cannot specify both the -DebugBuild and -ReleaseBuild parameters.  Please only use one of these parameters.'
@@ -78,6 +76,7 @@ function BuildWebSite()
         DisplayHeader 'Install Node Packages'
         npm install
         VerifyNativeFunctionSucceeded "ERROR: npm install failed with error code $LASTEXITCODE"
+        Get-ChildItem -Recurse # TODO - Remove
 
 
 
