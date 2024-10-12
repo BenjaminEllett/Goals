@@ -76,7 +76,7 @@ function BuildWebSite()
         DisplayHeader 'Install Node Packages'
         npm install
         VerifyNativeFunctionSucceeded "ERROR: npm install failed with error code $LASTEXITCODE"
-        Get-ChildItem -Recurse # TODO - Remove
+        Get-ChildItem -Recurse -Path './node_modules/.bin'
 
 
 
