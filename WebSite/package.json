@@ -4,8 +4,8 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "pwsh -File ./Build/Build.ps1 -Release -Build",
-    "start": "pwsh -File ./Build/Build.ps1 -Debug -BuildAndServeWebSite",
+    "build": "pwsh -NoProfile -File ./Build/Build.ps1 -Release -Build -CleanBuild",
+    "start": "pwsh -NoProfile -File ./Build/Build.ps1 -Debug -BuildAndServeWebSite -CleanBuild",
     "test": "echo \"TODO - Error: no test specified\" && exit 1"
   },
   "devDependencies": {

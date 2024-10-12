@@ -67,7 +67,7 @@ function BuildWebSite()
 
         if (!(Test-Path -Path $BuildOutputDirectoryRelativePath))
         {
-            New-Item -ItemType Directory -Path $BuildOutputDirectoryRelativePath
+            [void](New-Item -ItemType Directory -Path $BuildOutputDirectoryRelativePath)
         }
 
 
@@ -81,9 +81,6 @@ function BuildWebSite()
 
         DisplayBlankLine
         DisplayHeader 'Check for TypeScript errors'
-
-
-
         ./node_modules/.bin/tsc --noEmit
         VerifyNativeFunctionSucceeded "ERROR: The type script compiler failed with error code $LASTEXITCODE"
 
