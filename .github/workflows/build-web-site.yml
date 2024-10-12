@@ -40,10 +40,6 @@ jobs:
           node-version: 20.x
           check-latest: true
 
-      - name: Install NPM dependencies
-        run: npm install
-        working-directory: ./WebSite
-
       - name: Build Web Site
         run: npm run build
         working-directory: ./WebSite

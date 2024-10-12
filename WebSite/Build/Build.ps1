@@ -40,6 +40,8 @@ Set-StrictMode -Version Latest
 #
 function BuildWebSite()
 {
+    Get-ChildItem -Recurse # TODO - Remove
+
     if ($DebugBuild -and $ReleaseBuild)
     {
         throw 'ERROR: You cannot specify both the -DebugBuild and -ReleaseBuild parameters.  Please only use one of these parameters.'
@@ -81,6 +83,9 @@ function BuildWebSite()
 
         DisplayBlankLine
         DisplayHeader 'Check for TypeScript errors'
+
+
+
         ./node_modules/.bin/tsc.ps1 --noEmit
         VerifyNativeFunctionSucceeded "ERROR: The type script compiler failed with error code $LASTEXITCODE"
 
