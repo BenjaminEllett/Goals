@@ -1,31 +1,8 @@
-//
-// Constants
-//
-$goals-header-background-text-color: #0000FF;
-$goals-header-text-color: #FFFFFF;
-
-$goals-background-text-color: #FFFFFF;
-$goals-text-color: #000000;
-
-$goals-table-border-color: #000000;
-
-$section-separator-border-color:#000000;
-
-//
-// Remove the browser's style sheet settings.  This makes it easier to get the same look and feel on different browsers.
-//
-body, header, main, section,
-h1, h2, h3, h4, h5, h6,
-p, strong, 
-ul, ol, li,
-table, tr, th, td {
-    margin: 0rem;
-    padding: 0rem;
-    font-size: 100%;
-    font-weight: normal;
-}
-
-
+@use 'RemoveBrowserStyleSheet';
+@use 'Colors';
+@use 'NavigationBar';
+@use 'ProductExplanationPage/ExampleMetric';
+@use 'ProductExplanationPage/ProductExplanation';
 
 //
 // Major HTML element styles
@@ -38,27 +15,22 @@ body {
 }
 
 header {
-    background-color: $goals-header-background-text-color;
-    color: $goals-header-text-color;
+    background-color: Colors.$goals-header-background-color;
+    color: Colors.$goals-header-text-color;
     
     height: 6rem;
 }
 
 main {
-    background-color: $goals-background-text-color;
-    color: $goals-text-color;
+    background-color: Colors.$goals-background-text-color;
+    color: Colors.$goals-text-color;
 
     font-size: 1rem;
 
-    margin: 1rem;
-}
+    width: 100rem;
 
-section {
-    margin-bottom: 1rem;
-}
-
-main > section:not(main > section:first-child) {
-    border-top: 1px solid $section-separator-border-color; 
+    // Margin's parameters are in the following order: top, right, bottom, left
+    margin: 1rem auto 1rem auto;
 }
 
 
@@ -77,6 +49,10 @@ h1 {
     padding-left: 1rem;
     overflow: visible;
 } 
+
+.centered-header {
+    text-align: center;
+}
 
 h2 {
     font-size: 1.5rem;
@@ -97,11 +73,6 @@ p {
     margin: 1rem;
 }
 
-li > p {
-    // Margin's parameters are in the following order: top, right, bottom, left
-    margin: 1rem 1rem 1rem 0rem;
-}
-
 strong {
     font-weight: bold;
 }
@@ -110,11 +81,15 @@ strong {
 //
 // List element styles
 //
-li {
-    list-style-type: square;
-    
+
+ol {
     // Margin has 4 parameters: top, right, bottom, left
-    margin: 1rem 1rem 1rem 2.5rem;
+    margin: 0em 0em 0em 4em;
+}
+
+li > p {
+    // Margin's parameters are in the following order: top, right, bottom, left
+    margin: 1rem 1rem 1rem 0rem;
 }
 
 
@@ -124,7 +99,7 @@ li {
 //
 %commonTableBoarderStyle {
     border-width: 1px;
-    border-color: $goals-table-border-color;
+    border-color: Colors.$goals-table-border-color;
     border-style: solid;
 }
 
@@ -144,24 +119,23 @@ table {
     margin: 1rem 1rem 1rem 3rem;
 }
 
-li > table {
-    @extend table;
-
-    // Margin has 4 parameters: top, right, bottom, left
-    margin: 1rem 1rem 1rem 1.5rem;
-}
-
 th {
     @extend %commonTableCellStyle;
 
-    background-color: $goals-header-background-text-color;
-    color: $goals-header-text-color;
+    background-color: Colors.$goals-header-background-color;
+    color: Colors.$goals-header-text-color;
     font-weight: bold;
+
+    text-align: left;
+    width: 12em;
 }
 
 td {
     @extend %commonTableCellStyle;
 
-    background-color: $goals-background-text-color;
-    color: $goals-text-color;
+    background-color: Colors.$goals-background-text-color;
+    color: Colors.$goals-text-color;
+
+    text-align: left;
+    width: 40em;
 }

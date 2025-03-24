@@ -3,19 +3,19 @@ function DisplayBlankLine()
     Write-Host ''
 }
 
-function DisplayHorizonalSeparator()
+function DisplayHorizontalSeparator()
 {
     [int] $bufferWidthInChars = $Host.UI.RawUI.BufferSize.Width
-    [System.Text.StringBuilder] $horizonalSeparator = [System.Text.StringBuilder]::new($bufferWidthInChars)
-    [void]($horizonalSeparator.Append('-', $bufferWidthInChars))
+    [System.Text.StringBuilder] $horizontalSeparator = [System.Text.StringBuilder]::new($bufferWidthInChars)
+    [void]($horizontalSeparator.Append('-', $bufferWidthInChars))
 
-    Write-Host $horizonalSeparator.ToString()
+    Write-Host $horizontalSeparator.ToString()
 }
 
 function DisplayHeader([string] $headerName)
 {
-    DisplayHorizonalSeparator
+    DisplayHorizontalSeparator
     Write-Host $headerName
-    DisplayHorizonalSeparator
+    DisplayHorizontalSeparator
     DisplayBlankLine
 }

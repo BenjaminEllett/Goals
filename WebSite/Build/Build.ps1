@@ -34,7 +34,7 @@ Set-StrictMode -Version Latest
 # These functions do the following
 #   - Reset the build's state by deleting the build output directory and the node_modules directory (NPM stores node packages in this
 #     directory)
-#   - Transform TypeScript into bundled mimified JavaScript
+#   - Transform TypeScript into bundled minified JavaScript
 #   - Transform SASS into CSS
 #   - Copy files HTML files to to build output directory
 #
@@ -99,13 +99,10 @@ function BuildWebSite()
 
         DisplayBlankLine
         DisplayHeader 'Transform SASS (.scss) files to CSS (.css) files'
-        [System.IO.FileInfo[]] $sassFiles = GetSourceCodeFiles 'scss'
+        [System.IO.FileInfo]  $mainSassFile = Get-Item -Path './src/main.scss'
 
-        foreach ($currentSassFile in $sassFiles)
-        {
-            BuildSassFile $currentSassFile
-        }
-        
+        BuildSassFile $mainSassFile
+       
 
 
         DisplayBlankLine
@@ -138,9 +135,20 @@ function BuildWebSite()
         {
             throw $ThisCaseShouldNeverOccurErrorMessage
         }
+        
+        if ($BuildAndServeWebSite)
+        {
+            [System.Collections.Generic.List[string]] $nodeParameters = [System.Collections.Generic.List[string]]::new()
+            $nodeParameters.Add('./Build/Build.mjs')
+            $nodeParameters.AddRange($buildParameters)
 
-        node "./Build/Build.mjs" @buildParameters
-        VerifyNativeFunctionSucceeded "ERROR: The build script failed with error code $LASTEXITCODE"
+            RunCommandInNewWindowsTerminalTab "Build and serve web site" node @nodeParameters
+        }
+        else 
+        {
+            node './Build/Build.mjs' @buildParameters
+            VerifyNativeFunctionSucceeded "ERROR: The build script failed with error code $LASTEXITCODE"
+        }
     }
     finally 
     {
@@ -150,6 +158,8 @@ function BuildWebSite()
 
 function BuildSassFile([System.IO.FileInfo] $sassFile)
 {
+    Write-Verbose "Building SASS file: $($sassFile.FullName)"
+
     if ($sassFile.Extension -ne '.scss')
     {
         throw "ERROR: $($sassFile.FullName) is not a sass file"
@@ -207,14 +217,20 @@ function BuildSassFile([System.IO.FileInfo] $sassFile)
         "$($inputFilePath):$relativeOutputFilePath"
         '--verbose'
         '--color' 
-        '--stop-on-error' 
         "--fatal-deprecation=$sassVersionNumber"
-        '--future-deprecation=import'
-        '--future-deprecation=global-builtin'
         '--source-map'
     )
 
     $sassParameters.AddRange($initialSassParameters)
+
+    if ($BuildAndServeWebSite)
+    {
+        $sassParameters.Add('--watch')
+    }
+    else
+    {
+        $sassParameters.Add('--stop-on-error')
+    }
 
     if (IsReleaseBuild)
     {
@@ -222,17 +238,26 @@ function BuildSassFile([System.IO.FileInfo] $sassFile)
         $sassParameters.Add('--style=compressed')
     }
 
-    RunSassProgram $sassParameters.ToArray()
+    [bool] $runInSeparateWindowsTerminalTab = $BuildAndServeWebSite ? $true : $false
+
+    RunSassProgram $sassParameters.ToArray() $runInSeparateWindowsTerminalTab
 }
 
-function RunSassProgram([string[]] $commandLineOptions)
+function RunSassProgram([string[]] $commandLineOptions, [bool] $runInSeparateWindowsTerminalTab = $false)
 {
-    [string] $sassOutput = ./node_modules/.bin/sass @commandLineOptions
-    VerifyNativeFunctionSucceeded "ERROR: SASS (node .\node_modules\sass\sass.js) failed with error code $LASTEXITCODE"
-    return $sassOutput
+    Write-Verbose "Running ./node_modules/.bin/sass $commandLineOptions"
+
+    if ($runInSeparateWindowsTerminalTab)
+    {
+        RunCommandInNewWindowsTerminalTab "Build Sass" "./node_modules/.bin/sass" $commandLineOptions
+    }
+    else 
+    {
+        [string] $sassOutput = ./node_modules/.bin/sass @commandLineOptions
+        VerifyNativeFunctionSucceeded "ERROR: SASS (node .\node_modules\sass\sass.js) failed with error code $LASTEXITCODE"
+        return $sassOutput
+    }
 }
-
-
 
 #
 # Utility functions
@@ -278,6 +303,14 @@ function DidUserRequestABuildAndToServeTheWebSite()
     }
 
     return $false
+}
+
+function RunCommandInNewWindowsTerminalTab([string] $tabTitle, [string] $command, [string[]] $commandParameters)
+{
+    [System.Management.Automation.PathInfo] $workingDirectoryPathInfo = Get-Location
+    [string] $workingDirectory = $workingDirectoryPathInfo.Path
+
+    wt new-tab --title $tabTitle pwsh -NoProfile -WorkingDirectory $workingDirectory -Command $command @commandParameters
 }
 function VerifyNativeFunctionSucceeded([string] $errorMessage)
 {

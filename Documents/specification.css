@@ -1,0 +1,110 @@
+body, header, main, section,
+h1, h2, h3, h4, h5, h6,
+p, strong,
+ul, ol, li,
+table,
+li > table, tr, th, td {
+  margin: 0rem;
+  padding: 0rem;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 100%;
+  margin: 0rem;
+}
+
+header {
+  background-color: #0000FF;
+  color: #FFFFFF;
+  height: 6rem;
+}
+
+main {
+  background-color: #FFFFFF;
+  color: #000000;
+  font-size: 1rem;
+  margin: 1rem;
+}
+
+section {
+  margin-bottom: 1rem;
+}
+
+main > section:not(main > section:first-child) {
+  border-top: 1px solid #000000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 3rem;
+  margin: 0rem;
+  padding-top: 1.25rem;
+  padding-left: 1rem;
+  overflow: visible;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 1rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin: 1rem;
+}
+
+p {
+  margin: 1rem;
+}
+
+li > p {
+  margin: 1rem 1rem 1rem 0rem;
+}
+
+strong {
+  font-weight: bold;
+}
+
+li {
+  list-style-type: square;
+  margin: 1rem 1rem 1rem 2.5rem;
+}
+
+table, li > table, td, th {
+  border-width: 1px;
+  border-color: #000000;
+  border-style: solid;
+}
+
+td, th {
+  padding: 0.25rem;
+}
+
+table, li > table {
+  border-collapse: collapse;
+  text-align: start;
+  margin: 1rem 1rem 1rem 3rem;
+}
+
+li > table {
+  margin: 1rem 1rem 1rem 1.5rem;
+}
+
+th {
+  background-color: #0000FF;
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+td {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+/*# sourceMappingURL=specification.css.map */
