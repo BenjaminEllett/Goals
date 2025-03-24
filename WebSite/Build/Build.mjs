@@ -198,7 +198,7 @@ function CreateESBuildConfiguration(buildType)
         sourcesContent: isReleaseBuild, // https://esbuild.github.io/api/#sources-content 
         
         // Entry Point and Output Settings
-        entryPoints: ['./src/index.ts'], // https://esbuild.github.io/api/#entry-points
+        entryPoints: ['./src/index.tsx'], // https://esbuild.github.io/api/#entry-points
         outfile: `${buildOutputDirectoryRelativePath}/index.js`,  
 
         // JSX Settings

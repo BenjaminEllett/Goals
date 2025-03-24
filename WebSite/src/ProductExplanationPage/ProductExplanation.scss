@@ -1,0 +1,40 @@
+@use '../Colors';
+@use '../CommonStyles';
+
+.product-explanation-container {
+    background-color: Colors.$goals-background-text-color;
+    color: Colors.$goals-text-color;
+
+    font-size: 1rem;
+
+    max-width: 80rem;
+
+    // Margin's parameters are in the following order: top, right, bottom, left
+    margin: 1rem auto 1rem auto;
+}
+
+.production-explanation-section {
+    margin-bottom: 3rem;
+}
+
+.create-account-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.create-account-button {
+    @extend %common-button-style;
+    align-self: center;
+
+    font-size: 2rem;
+    height: 4rem;
+    // Padding's parameters are in the following order: top, right, bottom, left
+    padding: .5rem 1rem 0.5rem 1rem;
+    border-radius: 1rem;
+
+    text-align: center;
+
+    background-color: Colors.$create-account-button-color;
+    color: Colors.$create-account-button-text;
+}
+

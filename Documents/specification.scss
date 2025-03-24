@@ -1,0 +1,176 @@
+// How to convert this file into a CSS file:
+//
+// 1. Open a PowerShell window
+// 2. Go to ./Documents
+// 3. Run the following command:
+//      node ..\WebSite\node_modules\sass\sass.js .\specification.scss:.\specification.css --verbose --color --stop-on-error
+//
+
+
+//
+// Constants
+//
+$goals-header-background-color: #0000FF;
+$goals-header-text-color: #FFFFFF;
+
+$goals-background-text-color: #FFFFFF;
+$goals-text-color: #000000;
+
+$goals-table-border-color: #000000;
+
+$section-separator-border-color:#000000;
+
+//
+// Remove the browser's style sheet settings.  This makes it easier to get the same look and feel on different browsers.
+//
+body, header, main, section,
+h1, h2, h3, h4, h5, h6,
+p, strong, 
+ul, ol, li,
+table, tr, th, td {
+    margin: 0rem;
+    padding: 0rem;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+
+
+//
+// Major HTML element styles
+//
+body {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; 
+    font-size: 100%;
+
+    margin: 0rem;
+}
+
+header {
+    background-color: $goals-header-background-color;
+    color: $goals-header-text-color;
+    
+    height: 6rem;
+}
+
+main {
+    background-color: $goals-background-text-color;
+    color: $goals-text-color;
+
+    font-size: 1rem;
+
+    margin: 1rem;
+}
+
+section {
+    margin-bottom: 1rem;
+}
+
+main > section:not(main > section:first-child) {
+    border-top: 1px solid $section-separator-border-color; 
+}
+
+
+
+//
+// Heading styles
+//
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0rem;
+    padding-top: 1.25rem;
+    padding-left: 1rem;
+    overflow: visible;
+} 
+
+h2 {
+    font-size: 1.5rem;
+    margin: 1rem;
+}
+
+h3 {
+    font-size: 1.25rem;
+    margin: 1rem;
+}
+
+
+
+//
+// Text element styles
+//
+p {
+    margin: 1rem;
+}
+
+li > p {
+    // Margin's parameters are in the following order: top, right, bottom, left
+    margin: 1rem 1rem 1rem 0rem;
+}
+
+strong {
+    font-weight: bold;
+}
+
+
+//
+// List element styles
+//
+li {
+    list-style-type: square;
+    
+    // Margin has 4 parameters: top, right, bottom, left
+    margin: 1rem 1rem 1rem 2.5rem;
+}
+
+
+
+//
+// Table styles
+//
+%commonTableBoarderStyle {
+    border-width: 1px;
+    border-color: $goals-table-border-color;
+    border-style: solid;
+}
+
+%commonTableCellStyle {
+    @extend %commonTableBoarderStyle;
+
+    padding: 0.25rem;
+}
+
+table {
+    @extend %commonTableBoarderStyle;
+
+    border-collapse: collapse;
+    text-align: start;
+
+    // Margin has 4 parameters: top, right, bottom, left
+    margin: 1rem 1rem 1rem 3rem;
+}
+
+li > table {
+    @extend table;
+
+    // Margin has 4 parameters: top, right, bottom, left
+    margin: 1rem 1rem 1rem 1.5rem;
+}
+
+th {
+    @extend %commonTableCellStyle;
+
+    background-color: $goals-header-background-color;
+    color: $goals-header-text-color;
+    font-weight: bold;
+}
+
+td {
+    @extend %commonTableCellStyle;
+
+    background-color: $goals-background-text-color;
+    color: $goals-text-color;
+}

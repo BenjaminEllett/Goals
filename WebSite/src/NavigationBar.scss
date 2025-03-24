@@ -1,0 +1,52 @@
+@use 'Colors';
+@use 'CommonStyles';
+
+// TODO - Combine this with .navigation-bar if no one else uses it.
+%common-navigation-bar {
+    background-color: Colors.$goals-header-background-color;
+    color: Colors.$goals-header-text-color;
+}
+
+.navigation-bar {
+    @extend %common-navigation-bar;
+
+    // For more information on flexbox, see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox#the_flex_container .
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 6rem;
+}
+
+.navigation-button {
+    @extend %common-button-style;
+
+    font-size: 4rem;
+    height: 6rem;
+}
+
+.go-to-main-page-button {
+    @extend .navigation-button;
+
+    background-color: Colors.$goals-header-background-color;
+    color: Colors.$goals-header-text-color;
+}
+
+%common-sign-in-sign-out-button-styles {
+    @extend .navigation-button;
+
+    color: Colors.$goals-sign-in-out-button-text-color;
+}
+
+.sign-in-button {
+    @extend %common-sign-in-sign-out-button-styles;
+
+    background-color: Colors.$goals-sign-in-button-color;
+}
+
+.sign-out-button {
+    @extend %common-sign-in-sign-out-button-styles;
+
+    background-color: Colors.$goals-sign-out-button-color;
+}

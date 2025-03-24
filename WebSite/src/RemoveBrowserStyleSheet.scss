@@ -1,0 +1,13 @@
+//
+// Remove the browser's style sheet settings.  This makes it easier to get the same look and feel on different browsers.
+//
+body, header, main, section,
+h1, h2, h3, h4, h5, h6,
+p, strong, 
+ul, ol, li,
+table, tr, th, td {
+    margin: 0rem;
+    padding: 0rem;
+    font-size: 100%;
+    font-weight: normal;
+}
