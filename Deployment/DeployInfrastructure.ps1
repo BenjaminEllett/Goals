@@ -17,7 +17,7 @@ function Main([string] $environmentInternal)
 
 function DeployBicepFiles([string] $environmentInternal)
 {
-    DisplayHeader 'Reviewing and Deploying the Azure Infracture Changes in Goal''s Bicep files'
+    DisplayHeader 'Reviewing and Deploying the Azure Infrastructure Changes in Goal''s Bicep files'
 
     [string] $bicepFileDirectory = Join-Path -Path $PSScriptRoot -ChildPath 'Bicep'
 
@@ -25,14 +25,14 @@ function DeployBicepFiles([string] $environmentInternal)
 
     try 
     {
-        $getAzDeploymentWhatIfResultPatameters = @{
+        $getAzDeploymentWhatIfResultParameters = @{
             TemplateFile = 'Main.bicep'
             Location = 'West US 2'
             Environment = $environmentInternal
             ExcludeChangeType = 'NoChange'
         }
 
-        $whatIfResults = Get-AzDeploymentWhatIfResult @getAzDeploymentWhatIfResultPatameters
+        $whatIfResults = Get-AzDeploymentWhatIfResult @getAzDeploymentWhatIfResultParameters
         if ($whatIfResults.Status -ne 'Succeeded') 
         {
             [string] $errorMessage = $null -eq $whatIfResults.Error ? '' : $whatIfResults.Error.Message
@@ -103,16 +103,16 @@ function RemoveFalseChanges(
     $Delete = [Microsoft.Azure.Management.ResourceManager.Models.PropertyChangeType]::Delete
     [string] $webSiteResourceId = '/subscriptions/c47fab2e-7725-4c7e-a8a2-7e4a2ec97880/resourceGroups/goals-dev-usw2-rg-web-site/providers/Microsoft.Web/staticSites/goals-dev-usw2-swa-web-site' 
 
-    RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.areStaticSitesDistributedBackendsEnabled' $Delete
-    RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.deploymentAuthPolicy' $Delete
-    RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.stableInboundIP' $Delete
-    RemoveSinlgeFalseChange $whatIfResults $webSiteResourceId 'properties.trafficSplitting' $Delete
+    RemoveSingleFalseChange $whatIfResults $webSiteResourceId 'properties.areStaticSitesDistributedBackendsEnabled' $Delete
+    RemoveSingleFalseChange $whatIfResults $webSiteResourceId 'properties.deploymentAuthPolicy' $Delete
+    RemoveSingleFalseChange $whatIfResults $webSiteResourceId 'properties.stableInboundIP' $Delete
+    RemoveSingleFalseChange $whatIfResults $webSiteResourceId 'properties.trafficSplitting' $Delete
 }
 
-function RemoveSinlgeFalseChange(
+function RemoveSingleFalseChange(
     [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.Deployments.PSWhatIfOperationResult] $whatIfResults,
     [string] $changeResourceId,
-    [string] $properyPath,
+    [string] $propertyPath,
     [Microsoft.Azure.Management.ResourceManager.Models.PropertyChangeType] $changeType
     )
 {
@@ -122,11 +122,11 @@ function RemoveSinlgeFalseChange(
     $changedResource = $whatIfResults.Changes[$changedResourceIndex] 
     
     # Get the change
-    $deltaToRemove = $changedResource.Delta | Where-Object { $_.Path -eq $properyPath -and $_.PropertyChangeType -eq $changeType }
+    $deltaToRemove = $changedResource.Delta | Where-Object { $_.Path -eq $propertyPath -and $_.PropertyChangeType -eq $changeType }
     if ($null -eq $deltaToRemove)
     {
         [string] $warningMessage = 
-            "Unable to find the change for resource ID: $changeResourceId and property path: $properyPath .  This usually occurs " +
+            "Unable to find the change for resource ID: $changeResourceId and property path: $propertyPath .  This usually occurs " +
             "because the property name is misspelled or has a space at the end."
 
         Write-Warning $warningMessage
@@ -141,7 +141,7 @@ function RemoveSinlgeFalseChange(
               "returned when we searched for the change.  Here is some technical information: " +
               "resource ID: '$changeResourceId'   " +
               "change type: '$changeType'   " +
-              "property path: '$properyPath'   "
+              "property path: '$propertyPath'   "
     }
 
     # Remove changes which have no changes in them.  This prevents these changes from being displayed.
