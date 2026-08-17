@@ -12,7 +12,6 @@ Goals is a simple web application which helps people achieve their goals.
 
 ```
 cd .\Website
-npm install
 npm run build
 ```
 
@@ -20,8 +19,20 @@ npm run build
 # How to debug
 ## How to debug the web site
 
-TODO - Need to write instructions
+1. Open a terminal window
+2. Go to the root of Goal's GIT repository
+3. Type the following commands in PowerShell:
 
+```
+cd .\Website
+npm run start
+```
+
+4. The web site should be running.
+5. Open the GIT repository's root directory in Visual Studio Code
+6. Go to the **Run and Debug** pane on the left side of the screen (CTRL+SHIFT+D)
+7. Select the **Debug Web Site** configuration
+8. Press F5 to start the web site in the browser.  You can set break points in Visual Studio code.
 
 
 # How to deploy the service's infrastructure
@@ -55,6 +66,7 @@ $environmentName = 'Production'
 3. Git (https://git-scm.com/)
 4. PowerShell (https://github.com/PowerShell/PowerShell/releases)
 5. Azure PowerShell Module (https://www.powershellgallery.com/packages/Az/)
+6. Node JS (https://nodejs.org/)
 
 # Recommended tools
 1. Araxis Merge Pro (https://www.araxis.com/merge/index.en)

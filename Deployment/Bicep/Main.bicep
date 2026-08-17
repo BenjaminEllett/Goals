@@ -46,6 +46,7 @@ var environmentSettings = union(commonEnvironmentSettings, intermediateEnvironme
 //
 // Create Resource Groups
 //
+
 resource webSiteResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: '${environmentSettings.standardResourcePrefix}-rg-web-site'
   location: environmentSettings.regionName
